@@ -32,7 +32,7 @@ const NewsList = () => {
         `https://newsdata.io/api/1/news`, // NewsData API endpoint
         {
           params: {
-            country: 'us',
+            country: 'in',
             category: category,
             q: query || null,
             apikey: process.env.REACT_APP_NEWS_API_KEY, // Use your NewsData API key
