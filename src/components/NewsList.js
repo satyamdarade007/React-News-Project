@@ -17,7 +17,6 @@ const NewsList = () => {
     'business',
     'entertainment',
     'health',
-    'science',
     'sports',
     'technology',
   ];
@@ -34,6 +33,7 @@ const NewsList = () => {
           params: {
             country: 'in',
             category: category,
+            language: 'en',
             q: query || null,
             apikey: process.env.REACT_APP_NEWS_API_KEY, // Use your NewsData API key
           },
