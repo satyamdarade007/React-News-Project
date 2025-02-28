@@ -10,10 +10,10 @@ const NewsList = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('general');
+  const [category, setCategory] = useState('science');
 
   const categories = [
-    'general',
+    'science',
     'business',
     'entertainment',
     'health',
