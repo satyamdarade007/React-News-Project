@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import NewsArticle from './NewsArticle.js';
 import './NewsList.css';
@@ -22,7 +22,7 @@ const NewsList = () => {
     'technology',
   ];
 
-  const fetchNews = async () => {
+  const fetchNews = useCallback(async () => {
     setLoading(true);
     setError(false);
     setErrorMessage('');
@@ -47,11 +47,11 @@ const NewsList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, query]);
 
   useEffect(() => {
     fetchNews();
-  }, [category]);
+  }, [category, fetchNews]);
 
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
