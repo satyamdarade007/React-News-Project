@@ -1,0 +1,46 @@
+.news-list {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .search-bar input {
+    padding: 10px;
+    width: 80%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+  }
+  
+  .categories {
+    margin-bottom: 20px;
+  }
+  
+  .categories button {
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #efeaea;
+    border: 1px solid #94979b;
+    color: #007bff;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s;
+  }
+  .categories button:hover{
+    background-color: #007bff;
+    color: #fff;
+    transform: scale(1.1);
+    
+  }
+  
+  .categories .active {
+    background-color: #d942fa;
+    color: #fff;
+  }
+  
+  .articles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
