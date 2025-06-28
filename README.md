@@ -1,6 +1,7 @@
 # 🚀 QuickNews - Modern News Aggregator
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/1a981ddd-8a17-444e-b10b-bbf2656a1000/deploy-status)](https://app.netlify.com/projects/quicknewsapi/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status)](https://app.netlify.com/sites/your-site-name/overview)
+
 QuickNews is a modern, responsive news aggregator that delivers the latest headlines from around the world. Built with React and powered by the GNews API, it offers a clean, user-friendly interface for staying informed.
 
 ![QuickNews Screenshot](./public/screenshot.png)
@@ -16,7 +17,7 @@ QuickNews is a modern, responsive news aggregator that delivers the latest headl
 
 ## 🚀 Live Demo
 
-Check out the live demo: [QuickNews Live Demo](https://your-netlify-app-url.netlify.app/)
+Check out the live demo: [QuickNews Live Demo](https://quicknewsapi.netlify.app/)
 
 ## 🛠️ Tech Stack
 
@@ -36,7 +37,7 @@ Check out the live demo: [QuickNews Live Demo](https://your-netlify-app-url.netl
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/quicknews.git
+   git clone https://github.com/satyamdarade007/React-News-Project.git
    cd quicknews
    ```
 
@@ -96,4 +97,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Made with ❤️ by [Your Name] | [![Twitter](https://img.icons8.com/color/24/000000/twitter--v1.png)](https://twitter.com/yourhandle)
+Made with ❤️ by Satyam Darade | [![Twitter](https://img.icons8.com/color/24/000000/twitter--v1.png)](https://x.com/the_leOcious)
