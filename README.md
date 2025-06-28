@@ -17,7 +17,7 @@ QuickNews is a modern, responsive news aggregator that delivers the latest headl
 
 ## 🚀 Live Demo
 
-Check out the live demo: [QuickNews Live Demo](https://quicknewsapi.netlify.app/)
+Check out the live demo: [QuickNews Live Demo](https://reactnewsapiapp.netlify.app/)
 
 ## 🛠️ Tech Stack
 
