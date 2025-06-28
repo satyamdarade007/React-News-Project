@@ -7,8 +7,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <h1>📰 Today's Headlines</h1>
       <NewsList />
+      <h1>📰 Today's Headlines</h1>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import NewsArticle from './NewsArticle.js';
+import { FiSearch, FiExternalLink, FiClock, FiCalendar } from 'react-icons/fi';
+import NewsArticle from './NewsArticle';
 import './NewsList.css';
 
 const NewsList = () => {
@@ -8,17 +9,19 @@ const NewsList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [rateLimited, setRateLimited] = useState(false);
 
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('science');
 
   const categories = [
-    'science',
-    'business',
-    'entertainment',
-    'health',
-    'sports',
-    'technology',
+    { id: 'general', name: '🌍 Top Headlines', color: '#4F46E5' },
+    { id: 'business', name: '💼 Business', color: '#10B981' },
+    { id: 'entertainment', name: '🎬 Entertainment', color: '#8B5CF6' },
+    { id: 'health', name: '🏥 Health', color: '#EC4899' },
+    { id: 'science', name: '🔬 Science', color: '#3B82F6' },
+    { id: 'sports', name: '⚽ Sports', color: '#F59E0B' },
+    { id: 'technology', name: '💻 Technology', color: '#6366F1' },
   ];
 
   const fetchNews = useCallback(async () => {
@@ -27,23 +30,74 @@ const NewsList = () => {
     setErrorMessage('');
 
     try {
+      // Using GNews API which has a more generous free tier
       const response = await axios.get(
-        `https://newsdata.io/api/1/news`, // NewsData API endpoint
+        'https://gnews.io/api/v4/top-headlines',
         {
           params: {
             country: 'in',
-            category: category,
-            language: 'en',
-            q: query || null,
-            apikey: process.env.REACT_APP_NEWS_API_KEY, // Use your NewsData API key
+            category: category === 'general' ? undefined : category.toLowerCase(),
+            q: query || undefined,
+            max: 20,
+            lang: 'en',
+            apikey: 'b5a3efb0031f468211fb12bcbc042b97', // User's API key
           },
+          timeout: 10000,
         }
       );
-      setArticles(response.data.results);
+
+      // Reset rate limit state on successful fetch
+      setRateLimited(false);
+      
+      // Filter out articles without images
+      const articlesWithImages = response.data.articles.filter(article => 
+        article.image && 
+        !article.image.endsWith('.svg') &&
+        !article.image.includes('placeholder')
+      );
+      
+      if (articlesWithImages.length === 0) {
+        throw new Error('No articles with images found. Try a different category or search term.');
+      }
+      
+      // Map GNews API fields to match our component's expected format
+      const mappedArticles = articlesWithImages.map(article => ({
+        ...article,
+        image_url: article.image,
+        link: article.url,
+        source_id: article.source?.name || 'Unknown Source',
+        pubDate: article.publishedAt || new Date().toISOString(),
+        description: article.description || 'No description available',
+        title: article.title || 'Untitled Article',
+      }));
+
+      setArticles(mappedArticles);
     } catch (err) {
       console.error('Error fetching news:', err);
-      setError(true);
-      setErrorMessage(err.message);
+      
+      // Handle different types of errors
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        if (err.response.status === 429) {
+          setRateLimited(true);
+          setError(true);
+          setErrorMessage('API rate limit reached. Please wait a few minutes and try again.');
+        } else if (err.response.status === 401) {
+          setError(true);
+          setErrorMessage('Authentication failed. Please check your API key.');
+        } else {
+          setError(true);
+          setErrorMessage(`Error: ${err.response.status} - ${err.response.statusText}`);
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
+        setError(true);
+        setErrorMessage('No response from server. Please check your internet connection.');
+      } else {
+        // Something happened in setting up the request
+        setError(true);
+        setErrorMessage(`Error: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -54,49 +108,121 @@ const NewsList = () => {
   }, [category, fetchNews]);
 
   const handleSearch = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && query.trim() !== '') {
       fetchNews();
     }
   };
 
   return (
-    <div className="news-list">
-      {/* Search Bar */}
-      <div className="search-bar">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for news..."
-          onKeyPress={handleSearch}
-        />
-      </div>
-
-      {/* Category Buttons */}
-      <div className="categories">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            className={category === cat ? 'active' : ''}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      {/* News Articles */}
-      {loading ? (
-        <p>Loading news for you...</p>
-      ) : error ? (
-        <p>Sorry, we couldn't fetch the news. {errorMessage}</p>
-      ) : (
-        <div className="articles">
-          {articles.map((article) => (
-            <NewsArticle key={article.link} article={article} />
-          ))}
+    <div className="news-app">
+        <header className="app-header">
+        <div className="header-content">
+          <div className="header-text">
+            <div className="logo-container">
+              <span className="logo-icon">🚀</span>
+              <h1>Quick<span>News</span></h1>
+            </div>
+            <p className="tagline">Stay updated in seconds</p>
+          </div>
+          <div className="header-highlights">
+            <div className="highlight-item">
+              <span className="highlight-icon">⚡</span>
+              <span>Live Updates</span>
+            </div>
+            <div className="highlight-item">
+              <span className="highlight-icon">🌐</span>
+              <span>Global Coverage</span>
+            </div>
+            <div className="highlight-item">
+              <span className="highlight-icon">🔔</span>
+              <span>Breaking Alerts</span>
+            </div>
+          </div>
         </div>
-      )}
+      </header>
+      
+      <div className="search-container">
+        <div className="search-bar">
+          <FiSearch className="search-icon" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyPress={handleSearch}
+            placeholder="Search for news..."
+            aria-label="Search news"
+            disabled={loading}
+          />
+        </div>
+      </div>
+
+      <div className="categories-container">
+        <div className="categories-wrapper">
+          <div className="categories">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                className={`category-btn ${category === cat.id ? 'active' : ''}`}
+                onClick={() => setCategory(cat.id)}
+                aria-label={`Show ${cat.name} news`}
+                aria-pressed={category === cat.id}
+                style={{
+                  '--category-color': cat.color,
+                  '--category-hover': `${cat.color}15`,
+                  '--category-active': `${cat.color}20`
+                }}
+              >
+                <span className="category-text">{cat.name}</span>
+                <span className="category-icon">{cat.name.split(' ')[0]}</span>
+                <span className="active-indicator"></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <main className="main-content">
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Fetching the latest news...</p>
+          </div>
+        ) : error ? (
+          <div className="error-message">
+            <p>⚠️ {rateLimited ? 'Too Many Requests' : 'Sorry, we couldn\'t fetch the news.'}</p>
+            <p className="error-detail">{errorMessage}</p>
+            {!rateLimited && (
+              <button 
+                onClick={() => fetchNews(0)} 
+                className="retry-btn"
+                disabled={loading}
+              >
+                {loading ? 'Retrying...' : 'Retry'}
+              </button>
+            )}
+            {rateLimited && (
+              <div className="rate-limit-message">
+                <p>Please wait a few minutes before trying again.</p>
+                <p>You can also try refreshing the page in a moment.</p>
+              </div>
+            )}
+          </div>
+        ) : articles.length > 0 ? (
+          <div className="articles-grid">
+            {articles.map((article, index) => (
+              <NewsArticle key={index} article={article} />
+            ))}
+          </div>
+        ) : (
+          <div className="no-results">
+            <p>No articles found. Try a different search term or category.</p>
+          </div>
+        )}
+      </main>
+
+      <footer className="app-footer">
+        <p>© {new Date().getFullYear()} QuickNews - Stay Informed</p>
+      </footer>
     </div>
   );
 };
