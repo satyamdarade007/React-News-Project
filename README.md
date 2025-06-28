@@ -1,6 +1,6 @@
 # 🚀 QuickNews - Modern News Aggregator
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/your-site-id/deploy-status)](https://app.netlify.com/sites/your-site-name/overview)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1a981ddd-8a17-444e-b10b-bbf2656a1000/deploy-status)](https://app.netlify.com/projects/quicknewsapi/deploys)
 
 QuickNews is a modern, responsive news aggregator that delivers the latest headlines from around the world. Built with React and powered by the GNews API, it offers a clean, user-friendly interface for staying informed.
 
