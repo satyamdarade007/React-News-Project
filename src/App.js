@@ -8,7 +8,6 @@ function App() {
   return (
     <div className="App">
       <NewsList />
-      <h1>📰 Today's Headlines</h1>
     </div>
   );
 }

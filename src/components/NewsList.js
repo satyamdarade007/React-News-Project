@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import { FiSearch, FiExternalLink, FiClock, FiCalendar } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import NewsArticle from './NewsArticle';
 import './NewsList.css';
 
@@ -30,20 +30,24 @@ const NewsList = () => {
     setErrorMessage('');
 
     try {
-      // Using GNews API which has a more generous free tier
+      // Using GNews API with environment variable for API key
+      const apiKey = process.env.REACT_APP_GNEWS_API_KEY;
+      if (!apiKey) {
+        throw new Error('API key is not configured. Please check your .env file.');
+      }
+
+      const params = new URLSearchParams({
+        country: 'in',
+        ...(category !== 'general' && { category: category.toLowerCase() }),
+        ...(query && { q: query }),
+        max: 20,
+        lang: 'en',
+        apikey: apiKey,
+      });
+
       const response = await axios.get(
-        'https://gnews.io/api/v4/top-headlines',
-        {
-          params: {
-            country: 'in',
-            category: category === 'general' ? undefined : category.toLowerCase(),
-            q: query || undefined,
-            max: 20,
-            lang: 'en',
-            apikey: 'b5a3efb0031f468211fb12bcbc042b97', // User's API key
-          },
-          timeout: 10000,
-        }
+        `https://gnews.io/api/v4/top-headlines?${params.toString()}`,
+        { timeout: 10000 }
       );
 
       // Reset rate limit state on successful fetch
